@@ -7,15 +7,13 @@ export interface IUser {
   password: string
 }
 
-const JWT_SECRET_KEY = 'PRIVATE_AUTH_KEY'
-
 interface JwtPayload {
   userId: string
 }
 
 const jwtOptions: StrategyOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('jwt'),
-  secretOrKey: JWT_SECRET_KEY,
+  secretOrKey: process.env.JWT_SECRET_KEY,
   passReqToCallback: true
 }
 

@@ -7,24 +7,18 @@ import mongoose from 'mongoose'
 import fileUpload from 'express-fileupload'
 
 import graphQlSchema from './graphql/schema'
-import setupImageUpload from './rest/setupImageUpload'
-import { setupPassportAuth, onlyAuthorized } from './authenticate'
+import { setupPassportAuth, verifyToken } from './authenticate'
 import graphqlSchema from './graphql/schema'
+import imageUpload from './rest/imageUpload'
 ;(mongoose as any).Promise = global.Promise
 
 const app = express()
 
-const DEBUG_MODE = true
-
-app.use(
-  bodyParser.urlencoded({
-    extended: true
-  })
-)
+app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(bodyParser.json())
 
-setupPassportAuth(app, DEBUG_MODE)
+setupPassportAuth(app)
 
 app.use(
   '/graphql',
@@ -35,17 +29,15 @@ app.use(
   })
 )
 
-if (!DEBUG_MODE) {
-  app.use(onlyAuthorized())
-}
+app.use(express.static('./public'))
 
-app.use('/schema', onlyAuthorized(), (req, res, _next) => {
+app.use('/schema', verifyToken(), (req, res, _next) => {
   res.set('Content-Type', 'text/plain')
   res.send(printSchema(graphqlSchema))
 })
 
 app.use(fileUpload({ createParentPath: true }))
-setupImageUpload(app)
+app.post('/imageUpload', imageUpload)
 
 async function start() {
   try {
