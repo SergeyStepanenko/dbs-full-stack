@@ -1,7 +1,6 @@
 {
-  "name": "node-typescript-playground",
+  "name": "dbs-project-backend",
   "version": "1.0.0",
-  "description": "Just a playground",
   "main": "src/server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -38,5 +37,16 @@
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "typescript": "^3.7.0-beta"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx,json,css,md}": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }

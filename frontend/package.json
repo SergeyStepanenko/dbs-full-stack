@@ -1,9 +1,5 @@
 {
   "name": "dbs-project-frontend",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/SergeyStepanenko/dbs-project-frontend.git"
-  },
   "version": "0.0.0",
   "description": "Next + Apollo integration",
   "scripts": {

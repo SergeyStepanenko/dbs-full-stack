@@ -10,7 +10,7 @@ export interface User {
 }
 
 export interface UserModel extends User, BaseTime, Document {
-  comparePassword(password: string): boolean
+  comparePassword(password: string): Promise<boolean>
 }
 
 const modelSchema = new Schema({
@@ -22,7 +22,7 @@ modelSchema.pre('save', preSaveAddBaseTime)
 
 // Use bcrypt to has the user password in the DB
 modelSchema.pre('save', function preSaveAddPasswordHash(next) {
-  const user = this
+  const user = this as UserModel
   // only hash the password if it has been modified (or is new)
   if (!user.isModified('password')) {
     return next()
@@ -35,13 +35,11 @@ modelSchema.pre('save', function preSaveAddPasswordHash(next) {
     }
 
     // hash the password along with our new salt
-    // @ts-ignore
     bcrypt.hash(user.password, salt, function(errorHash, hash) {
       if (errorHash) {
         return next(errorHash)
       }
       // override the cleartext password with the hashed one
-      // @ts-ignore
       user.password = hash
       next()
     })
@@ -70,7 +68,7 @@ export function getUserById(id: string) {
   return UserModel.findOne({ _id: id })
 }
 
-export function getUserByUsername(username) {
+export function getUserByUsername(username: string) {
   return UserModel.findOne({ username })
 }
 
@@ -80,6 +78,6 @@ export function addUser(input: User) {
   return rec
 }
 
-export function removeUser(id) {
+export function removeUser(id: string) {
   return UserModel.findByIdAndRemove(id)
 }

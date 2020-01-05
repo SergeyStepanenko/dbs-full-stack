@@ -32,7 +32,9 @@ export async function login(input: IUser) {
     throw new Error(`User for "${username}" could not be found`)
   }
 
-  if (!(await user.comparePassword(password))) {
+  const isPasswordCorrect = await user.comparePassword(password)
+
+  if (!isPasswordCorrect) {
     throw new Error('User password is not correct')
   }
 
