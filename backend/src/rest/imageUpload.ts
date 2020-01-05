@@ -1,25 +1,23 @@
+import map from 'lodash/map'
 import isEmpty from 'lodash/isEmpty'
 import { Request, Response } from 'express-serve-static-core'
-import { UploadedFile } from 'express-fileupload'
+import processAndSaveImage from './utils/processAndSaveImage'
 
-export default function imageUpload(req: Request, res: Response) {
+async function imageUpload(req: Request, res: Response) {
   try {
     if (isEmpty(req.files)) {
       return res.status(400).send('No files were uploaded.')
     }
 
-    let image = req.files.image as UploadedFile
+    // Save processed image variants
+    const promises = map(req.files, processAndSaveImage)
 
-    const imageId = image.md5
+    const imageIdList = await Promise.all(promises)
 
-    image.mv(`public/images/${imageId}`, (err) => {
-      if (err) {
-        return res.status(500).send(err)
-      }
-
-      res.send({ id: imageId })
-    })
+    res.send({ ids: imageIdList })
   } catch (error) {
     throw new Error('Image uploading failure')
   }
 }
+
+export default imageUpload
