@@ -4,7 +4,7 @@ import { BaseTime, preSaveAddBaseTime } from './base'
 export interface Product {
   name: string
   description: string
-  barcode: string
+  images: string[]
 }
 
 export interface ProductModel extends Product, BaseTime, Document {}
@@ -12,7 +12,7 @@ export interface ProductModel extends Product, BaseTime, Document {}
 const modelSchema = new Schema<Product>({
   name: { type: String, required: false },
   description: String,
-  barcode: { type: String, required: true, unique: true }
+  images: [{ type: String, required: true, unique: true }]
 })
 
 modelSchema.pre('save', preSaveAddBaseTime)
@@ -29,7 +29,9 @@ export function getProducts(limit = 100) {
 
 export function addProduct(input: Product) {
   const rec = new ProductModel(input)
+
   rec.save()
+
   return rec
 }
 

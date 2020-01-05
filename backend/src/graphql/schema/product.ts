@@ -1,30 +1,13 @@
 import {
   GraphQLEnumType,
-  GraphQLInterfaceType,
   GraphQLObjectType,
   GraphQLList,
   GraphQLNonNull,
-  GraphQLSchema,
   GraphQLString,
   GraphQLInt
 } from 'graphql'
 
 import { getProducts, addProduct } from '../../db/products'
-
-const productTypeEnum = new GraphQLEnumType({
-  name: 'ProductType',
-  description: 'Types of products',
-  values: {
-    FOOD: {
-      value: 1,
-      description: 'Food.'
-    },
-    DRINK: {
-      value: 2,
-      description: 'Drink'
-    }
-  }
-})
 
 const productType = new GraphQLObjectType({
   name: 'Product',
@@ -38,13 +21,9 @@ const productType = new GraphQLObjectType({
       type: GraphQLString,
       description: 'The description'
     },
-    barcode: {
-      type: GraphQLString,
-      description: 'The description'
-    },
-    type: {
-      type: new GraphQLList(productTypeEnum),
-      description: 'Type of the product'
+    images: {
+      type: new GraphQLList(GraphQLString),
+      description: 'The product images'
     }
   })
 })
@@ -72,8 +51,8 @@ const mutation = {
       description: {
         type: GraphQLString
       },
-      barcode: {
-        type: new GraphQLNonNull(GraphQLString)
+      images: {
+        type: new GraphQLList(GraphQLString)
       }
     },
     resolve: (obj, input) => addProduct(input)
