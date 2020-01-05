@@ -12,9 +12,9 @@ async function imageUpload(req: Request, res: Response) {
     // Save processed image variants
     const promises = map(req.files, processAndSaveImage)
 
-    const imageIdList = await Promise.all(promises)
+    const imagesData = await Promise.all(promises)
 
-    res.send({ ids: imageIdList })
+    res.send({ images: imagesData })
   } catch (error) {
     throw new Error('Image uploading failure')
   }

@@ -1,43 +1,38 @@
 import jimp from 'jimp'
 import { UploadedFile } from 'express-fileupload'
-import { PATH_TO_IMAGES } from '../constants'
 import { EImageVariant } from '../types'
 
 export default async function processAndSaveImage(image: UploadedFile) {
+  const imageId = image.md5
+
   const imageMap = {
     [EImageVariant.PREVIEW]: {
       width: jimp.AUTO,
       height: 360,
-      path: `./${PATH_TO_IMAGES}/360/${image.md5}.png`
+      path: `./public/images/360/${imageId}.png`
     },
     [EImageVariant.FULL]: {
       width: jimp.AUTO,
       height: 720,
-      path: `./${PATH_TO_IMAGES}/720/${image.md5}.png`
-    },
-    [EImageVariant.ORIG]: {
-      path: `./${PATH_TO_IMAGES}/orig/${image.md5}.png`
+      path: `./public/images/720/${imageId}.png`
     }
   }
 
   const variantsToProcess = Object.keys(imageMap)
 
-  variantsToProcess.forEach(async (variant) => {
+  const promises = variantsToProcess.map(async (variant) => {
     const { path, width, height } = imageMap[variant]
+
     const jimpConstructor = await jimp.read(image.data)
 
-    switch (variant) {
-      case EImageVariant.ORIG: {
-        jimpConstructor.write(path)
-
-        break
-      }
-
-      default: {
-        jimpConstructor.resize(width, height).write(path)
-      }
-    }
+    jimpConstructor.resize(width, height).write(path)
   })
 
-  return image.md5
+  await Promise.all(promises)
+
+  return {
+    id: imageId,
+    url: `/images/720/${imageId}.png`,
+    urlPreview: `/images/360/${imageId}.png`
+  }
 }
