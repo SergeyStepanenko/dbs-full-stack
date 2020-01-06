@@ -10,7 +10,6 @@ import graphQlSchema from './graphql/schema'
 import { setupPassportAuth, verifyToken } from './authenticate'
 import graphqlSchema from './graphql/schema'
 import imageUpload from './rest/imageUpload'
-;(mongoose as any).Promise = global.Promise
 
 const app = express()
 
@@ -52,7 +51,7 @@ async function start() {
       `Connected to DB successfuly\nport: 5000\ngrapiQL: http://localhost:5000/graphql`
     )
   } catch (error) {
-    console.log(`Error connection to DB: ${error}`)
+    console.log(error)
   }
 }
 
