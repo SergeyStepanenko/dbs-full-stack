@@ -1,5 +1,10 @@
 version: "3"
 services:
+  mongo:
+    container_name: dbs_mongo
+    image: mongo
+    ports:
+      - "27017:27017"
   frontend:
     container_name: dbs_next
     restart: always
@@ -18,12 +23,8 @@ services:
     build: backend
     ports:
       - "5000:5000"
+      - "9229:9229"
     links:
       - mongo
     volumes:
       - ./backend:/app
-  mongo:
-    container_name: dbs_mongo
-    image: mongo
-    ports:
-      - "27017:27017"
