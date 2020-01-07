@@ -1,7 +1,7 @@
 import map from 'lodash/map'
 import isEmpty from 'lodash/isEmpty'
 import { Request, Response } from 'express-serve-static-core'
-import processAndSaveImage from './utils/processAndSaveImage'
+import processImage from './utils/processImage'
 
 async function imageUpload(req: Request, res: Response) {
   try {
@@ -10,7 +10,7 @@ async function imageUpload(req: Request, res: Response) {
     }
 
     // Save processed image variants
-    const promises = map(req.files, processAndSaveImage)
+    const promises = map(req.files, processImage)
 
     const imagesData = await Promise.all(promises)
 
