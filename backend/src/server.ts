@@ -36,7 +36,7 @@ app.use('/schema', verifyToken(), (req, res, _next) => {
 })
 
 app.use(fileUpload({ createParentPath: true }))
-app.post('/imageUpload', imageUpload)
+app.post('/api/imageUpload', imageUpload)
 
 async function start() {
   try {
