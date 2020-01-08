@@ -7,7 +7,7 @@ import {
   GraphQLInt
 } from 'graphql'
 
-import { getProducts, addProduct } from '../../db/products'
+import { getProducts, addProduct, removeProduct } from '../../db/products'
 
 const productType = new GraphQLObjectType({
   name: 'Product',
@@ -49,17 +49,18 @@ const mutation = {
   addProduct: {
     type: productType,
     args: {
-      name: {
-        type: GraphQLString
-      },
-      description: {
-        type: GraphQLString
-      },
-      images: {
-        type: new GraphQLList(GraphQLString)
-      }
+      name: { type: GraphQLString },
+      description: { type: GraphQLString },
+      images: { type: new GraphQLList(GraphQLString) }
     },
     resolve: (obj, input) => addProduct(input)
+  },
+  productDelete: {
+    type: productType,
+    args: {
+      _id: { type: GraphQLString }
+    },
+    resolve: (obj, input) => removeProduct(input)
   }
 }
 

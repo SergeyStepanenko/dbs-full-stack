@@ -1,7 +1,8 @@
 import React from 'react'
 import { gql } from 'apollo-boost'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import isEmpty from 'lodash/isEmpty'
+import ProductItem from '../ProductItem'
 
 interface IProductListProps {}
 
@@ -46,18 +47,8 @@ const ProductList: React.FunctionComponent<IProductListProps> = () => {
 
   return (
     <ul>
-      {products.map(({ _id, name, description, images }) => (
-        <li key={_id}>
-          {images.map((imageUrl) => (
-            <img
-              key={imageUrl}
-              src={`http://localhost:5000/images/360/${imageUrl}.png`}
-              height="200px"
-            />
-          ))}
-          <p>{name}</p>
-          <p>{description}</p>
-        </li>
+      {products.map((product) => (
+        <ProductItem key={product._id} {...product} />
       ))}
     </ul>
   )
