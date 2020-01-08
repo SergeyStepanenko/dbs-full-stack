@@ -1,3 +1,4 @@
+import { Document } from 'mongoose'
 import {
   GraphQLEnumType,
   GraphQLObjectType,
@@ -8,12 +9,13 @@ import {
 } from 'graphql'
 
 import { getProducts, addProduct, removeProduct } from '../../db/products'
+import { IProduct } from 'global-types'
 
 const productType = new GraphQLObjectType({
   name: 'Product',
   description: 'Product belong to a user',
   fields: () => ({
-    _id: {
+    id: {
       type: GraphQLString,
       description: 'Product Id'
     },
@@ -53,14 +55,16 @@ const mutation = {
       description: { type: GraphQLString },
       images: { type: new GraphQLList(GraphQLString) }
     },
-    resolve: (obj, input) => addProduct(input)
+    resolve: (_, input: IProduct) => addProduct(input)
   },
   productDelete: {
     type: productType,
     args: {
-      _id: { type: GraphQLString }
+      id: { type: GraphQLString }
     },
-    resolve: (obj, input) => removeProduct(input)
+    resolve: (_, input: { id: Document['id'] }) => {
+      return removeProduct(input)
+    }
   }
 }
 

@@ -3,7 +3,7 @@ import { gql } from 'apollo-boost'
 import { useMutation } from '@apollo/react-hooks'
 
 interface IProduct {
-  _id: string
+  id: string
   name: string
   description: string
   images: string[]
@@ -12,8 +12,8 @@ interface IProduct {
 interface IProductItemProps extends IProduct {}
 
 const PRODUCT_DELETE = gql`
-  mutation productDelete($_id: String!) {
-    productDelete(_id: $_id) {
+  mutation productDelete($id: String!) {
+    productDelete(id: $id) {
       name
       description
       images
@@ -24,10 +24,10 @@ const PRODUCT_DELETE = gql`
 const ProductItem: React.FunctionComponent<IProductItemProps> = (
   props: IProductItemProps
 ) => {
-  const { _id, name, description, images } = props
+  const { id, name, description, images } = props
 
   const [productDelete] = useMutation(PRODUCT_DELETE, {
-    variables: { _id }
+    variables: { id }
   })
 
   const handleClick = () => {
@@ -35,7 +35,7 @@ const ProductItem: React.FunctionComponent<IProductItemProps> = (
   }
 
   return (
-    <li key={_id}>
+    <li key={id}>
       {images.map((imageUrl) => (
         <img
           key={imageUrl}
