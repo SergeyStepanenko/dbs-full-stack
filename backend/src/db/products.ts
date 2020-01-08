@@ -10,9 +10,10 @@ export interface Product {
 export interface ProductModel extends Product, BaseTime, Document {}
 
 const modelSchema = new Schema<Product>({
+  _id: String,
   name: { type: String, required: false },
   description: String,
-  images: [{ type: String, required: true, unique: true }]
+  images: [{ type: String, required: true }]
 })
 
 modelSchema.pre('save', preSaveAddBaseTime)
@@ -28,9 +29,7 @@ export function getProducts(limit = 100) {
 }
 
 export function addProduct(input: Product) {
-  const rec = new ProductModel(input)
-
-  rec.save()
+  const rec = ProductModel.create(input)
 
   return rec
 }

@@ -17,11 +17,12 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(bodyParser.json())
 
+app.use(cors())
+
 setupPassportAuth(app)
 
 app.use(
   '/graphql',
-  cors(),
   graphqlHttp({
     schema: graphQlSchema,
     graphiql: true

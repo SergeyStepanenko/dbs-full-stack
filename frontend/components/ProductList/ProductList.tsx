@@ -8,6 +8,7 @@ interface IProductListProps {}
 const GET_PRODUCT_LIST = gql`
   query products {
     products {
+      _id
       name
       description
       images
@@ -16,6 +17,7 @@ const GET_PRODUCT_LIST = gql`
 `
 
 interface IProduct {
+  _id: string
   name: string
   description: string
   images: string[]
@@ -44,8 +46,8 @@ const ProductList: React.FunctionComponent<IProductListProps> = () => {
 
   return (
     <ul>
-      {products.map(({ name, description, images }) => (
-        <li key={name}>
+      {products.map(({ _id, name, description, images }) => (
+        <li key={_id}>
           {images.map((imageUrl) => (
             <img
               key={imageUrl}

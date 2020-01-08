@@ -1,70 +1,48 @@
-import { useState } from 'react'
+import React from 'react'
 import { useMutation } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 import { Form, H1, Input } from './styles'
 
-const CREATE_POST = gql`
-  mutation createPost($title: String!, $url: String!) {
-    createPost(title: $title, url: $url) {
-      id
-      title
-      votes
-      url
-      createdAt
+const CREATE_PRODUCT = gql`
+  mutation addProduct(
+    $name: String!
+    $description: String!
+    $images: [String!]!
+  ) {
+    addProduct(name: $name, description: $description, images: $images) {
+      name
+      description
+      images
     }
   }
 `
 
-const GET_POSTS = gql`
-  query allPosts($first: Int!, $skip: Int!) {
-    allPosts(orderBy: createdAt_DESC, first: $first, skip: $skip) {
-      id
-      title
-      votes
-      url
-      createdAt
-    }
-  }
-`
+export default function ProductCreate() {
+  const [name, setName] = React.useState('Продукт тест')
+  const [description, setDescription] = React.useState('Какое-то описание')
+  const [images, setImages] = React.useState([
+    '783c2a6b13184f2a77450a1ff6dba4c0'
+  ])
 
-export default function Submit() {
-  const [title, setTitle] = useState('')
-  const [url, setUrl] = useState('')
-
-  const [createPost, { error, data }] = useMutation(CREATE_POST, {
-    variables: { title, url },
-    update: (proxy, mutationResult) => {
-      const { allPosts } = proxy.readQuery({
-        query: GET_POSTS,
-        variables: { first: 10, skip: 0 }
-      })
-      const newPost = mutationResult.data.createPost
-      proxy.writeQuery({
-        query: GET_POSTS,
-        variables: { first: 10, skip: 0 },
-        data: {
-          allPosts: [newPost, ...allPosts]
-        }
-      })
-    }
+  const [addProduct, { error, data }] = useMutation(CREATE_PRODUCT, {
+    variables: { name, description, images }
   })
 
-  function handleSubmit(e) {
-    e.preventDefault()
-    if (title === '' || url === '') {
-      window.alert('Both fields are required.')
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    if (name === '' || description === '' || images.length === 0) {
+      console.error('Error')
+
       return false
     }
 
-    createPost()
-
-    // reset form
-    e.target.elements.title.value = ''
-    e.target.elements.url.value = ''
+    try {
+      addProduct()
+    } catch (error) {
+      console.error(error)
+    }
   }
-
-  // prepend http if missing from url
-  const pattern = /^((http|https):\/\/)/
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -72,18 +50,14 @@ export default function Submit() {
       <Input
         placeholder="title"
         name="title"
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={(event) => setName(event.target.value)}
+        value={name}
       />
       <Input
         placeholder="url"
         name="url"
-        onChange={(e) =>
-          setUrl(
-            !pattern.test(e.target.value)
-              ? `https://${e.target.value}`
-              : e.target.value
-          )
-        }
+        onChange={(event) => setDescription(event.target.value)}
+        value={description}
       />
       <button type="submit">Submit</button>
     </Form>

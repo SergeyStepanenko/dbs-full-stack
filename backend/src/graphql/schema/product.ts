@@ -13,6 +13,10 @@ const productType = new GraphQLObjectType({
   name: 'Product',
   description: 'Product belong to a user',
   fields: () => ({
+    _id: {
+      type: GraphQLString,
+      description: 'Product Id'
+    },
     name: {
       type: GraphQLString,
       description: 'The name'
