@@ -1,7 +1,4 @@
-// @ts-ignore
-import withCSS from '@zeit/next-css'
-
-export default withCSS({
+module.exports = {
   target: 'serverless',
   env: {
     BACKEND_URL: process.env.BACKEND_URL
@@ -13,4 +10,4 @@ export default withCSS({
     }
     return config
   }
-})
+}
