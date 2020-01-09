@@ -1,3 +1,3 @@
 # dbs-full-stack
 
-It in heavy development process.
+It is in heavy development process.
