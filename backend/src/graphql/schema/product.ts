@@ -1,3 +1,4 @@
+import { IProduct } from 'global-types'
 import { Document } from 'mongoose'
 import {
   GraphQLEnumType,
@@ -9,7 +10,6 @@ import {
 } from 'graphql'
 
 import { getProducts, addProduct, removeProduct } from '../../db/products'
-import { IProduct } from 'global-types'
 
 const productType = new GraphQLObjectType({
   name: 'Product',

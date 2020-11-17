@@ -5,11 +5,14 @@ import { printSchema } from 'graphql'
 import graphqlHttp from 'express-graphql'
 import mongoose from 'mongoose'
 import fileUpload from 'express-fileupload'
+import dotenv from 'dotenv'
 
 import graphQlSchema from './graphql/schema'
 import { setupPassportAuth, verifyToken } from './authenticate'
 import graphqlSchema from './graphql/schema'
 import imageUpload from './rest/imageUpload'
+
+dotenv.config()
 
 const app = express()
 
@@ -41,9 +44,10 @@ app.post('/api/imageUpload', imageUpload)
 
 async function start() {
   try {
-    await mongoose.connect('mongodb://mongo:27017/dbs-project', {
+    await mongoose.connect(process.env.MONGOOSE_CONNECTION_STRING, {
       useNewUrlParser: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
+      useFindAndModify: false
     })
 
     app.listen(5000)

@@ -1,9 +1,9 @@
+import { Request, Response } from 'express'
 import map from 'lodash/map'
 import isEmpty from 'lodash/isEmpty'
-import { Request, Response } from 'express-serve-static-core'
 import processImage from './utils/processImage'
 
-async function imageUpload(req: Request, res: Response) {
+async function imageUpload(req: any, res: Response) {
   try {
     if (isEmpty(req.files)) {
       return res.status(400).send('No files were uploaded.')
